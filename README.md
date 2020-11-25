@@ -1,6 +1,3 @@
-# DotNetCoreBetterConsoleApp
-A better console application with .NET Core 3.1 
+# DotNetCoreDirectoryStructureBasedOnJsonFile
 
-- Dependency Injecton
-- Logging (Serilog)
-- Settings (appsetting.json)
+Simple console app (with DI and logging) that reads a json file and creates a folder structure based on that json structure
