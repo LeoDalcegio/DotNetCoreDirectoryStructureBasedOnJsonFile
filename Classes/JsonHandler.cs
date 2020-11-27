@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using DotNetCoreBetterConsoleApp.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -25,29 +26,43 @@ namespace DotNetCoreBetterConsoleApp.Classes
 
             string baseDirectory = Path.GetDirectoryName(jsonPath);
 
-            JObject obj = JsonConvert.DeserializeObject<JObject>(jsonContent);
+            IDictionary<string, JToken> JsonData = JObject.Parse(jsonContent);
 
-            var properties = obj.Properties();
-
-            // /home/leonardo/projects/DotNetCoreBetterConsoleApp/tests/test.json
-
-            foreach (JProperty prop in properties)
+            foreach (KeyValuePair<string, JToken> element in JsonData)
             {
-                currentDirectory = prop.Name;
+                if (element.Value is JArray)
+                {
+                    // Process JArray
+                }
+                else if (element.Value is JObject)
+                {
+                    currentDirectory = element.Key;
 
-                // Check if value is another json, go inside it (currentDirectory = ),
-                // create directory with that name
+                    string newDirectory = baseDirectory + "/" + currentDirectory;
 
-                Directory.CreateDirectory(baseDirectory + "/" + currentDirectory);
+                    Directory.CreateDirectory(newDirectory);
 
-                // var childrenTokens = prop.Children();
+                    RecursiveCreateNestedDirectories(element.Value as JObject, newDirectory);
+                }
 
-                // foreach (var child in childrenTokens)
-                // {
-                //     currentDirectory = currentDirectory + "/" + child.Path;
+                // /home/leonardo/projects/DotNetCoreBetterConsoleApp/tests/test.json
+                // C:\ASV\DotNetCoreDirectoryStructureBasedOnJsonFile\tests\test.json
+            }
+        }
 
-                //     Directory.CreateDirectory(baseDirectory + "/" + currentDirectory);
-                // }
+        private void RecursiveCreateNestedDirectories(JObject jObject, string baseDirectory)
+        {
+            string currentDirectory = "";
+
+            foreach (var child in jObject)
+            {
+                currentDirectory = child.Key;
+
+                string newDirectory = baseDirectory + "/" + currentDirectory;
+
+                Directory.CreateDirectory(newDirectory);
+
+                RecursiveCreateNestedDirectories(child.Value as JObject, newDirectory);
             }
         }
     }
