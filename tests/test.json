@@ -1,6 +1,8 @@
 {
     "firstFolder": {
-        "secondFolder": {}
+        "secondFolder": {
+            "thirdFolder": {}
+        }
     },
     "anotherFolder": {}
 }

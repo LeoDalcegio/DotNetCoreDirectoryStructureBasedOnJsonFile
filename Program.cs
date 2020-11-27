@@ -39,7 +39,7 @@ namespace DotNetCoreBetterConsoleApp
 
             string fileContent = await filesHandlerSvc.GetFileContentByPath(jsonFilePath);
 
-            jsonHandlerSvc.ProcessJsonContent(fileContent);
+            jsonHandlerSvc.CreateDirectoriesBasedOnJsonContent(fileContent, jsonFilePath);
         }
 
         static void BuildConfig(IConfigurationBuilder builder)

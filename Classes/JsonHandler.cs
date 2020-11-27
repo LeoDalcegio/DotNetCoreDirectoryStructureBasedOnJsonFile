@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using DotNetCoreBetterConsoleApp.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -18,14 +19,35 @@ namespace DotNetCoreBetterConsoleApp.Classes
             _config = config;
         }
 
-        public void ProcessJsonContent(string jsonContent)
+        public void CreateDirectoriesBasedOnJsonContent(string jsonContent, string jsonPath)
         {
+            string currentDirectory = "";
+
+            string baseDirectory = Path.GetDirectoryName(jsonPath);
+
             JObject obj = JsonConvert.DeserializeObject<JObject>(jsonContent);
+
             var properties = obj.Properties();
-            foreach (var prop in properties)
+
+            // /home/leonardo/projects/DotNetCoreBetterConsoleApp/tests/test.json
+
+            foreach (JProperty prop in properties)
             {
-                Console.WriteLine(prop.Name);
-                Console.WriteLine(prop.Value);
+                currentDirectory = prop.Name;
+
+                // Check if value is another json, go inside it (currentDirectory = ),
+                // create directory with that name
+
+                Directory.CreateDirectory(baseDirectory + "/" + currentDirectory);
+
+                // var childrenTokens = prop.Children();
+
+                // foreach (var child in childrenTokens)
+                // {
+                //     currentDirectory = currentDirectory + "/" + child.Path;
+
+                //     Directory.CreateDirectory(baseDirectory + "/" + currentDirectory);
+                // }
             }
         }
     }
